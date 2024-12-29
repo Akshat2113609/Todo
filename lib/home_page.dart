@@ -43,6 +43,12 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  void deleteTask(int index) {
+    setState(() {
+      TodoList.removeAt(index);
+    });
+  }
+
   @override
   Widget build(context) {
     return Scaffold(
@@ -59,9 +65,11 @@ class _HomePageState extends State<HomePage> {
         itemCount: TodoList.length,
         itemBuilder: (context, index) {
           return ToDoTile(
-              taskName: TodoList[index][0],
-              taskCompleted: TodoList[index][1],
-              onChanged: (value) => checkBoxChanged(value, index));
+            taskName: TodoList[index][0],
+            taskCompleted: TodoList[index][1],
+            onChanged: (value) => checkBoxChanged(value, index),
+            deleteFunction: (context) => deleteTask(index),
+          );
         },
       ),
     );

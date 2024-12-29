@@ -3,7 +3,10 @@ import 'package:myapp/utilities/dialog_box.dart';
 import 'package:myapp/utilities/todo_tile.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback toggleTheme;
+
+  const HomePage({super.key, required this.toggleTheme});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -14,33 +17,40 @@ class _HomePageState extends State<HomePage> {
     ["Exercise", false],
     ["Code", false]
   ];
+
+  final _Controller1 = TextEditingController();
+
   void checkBoxChanged(bool? value, int index) {
     setState(() {
       TodoList[index][1] = !TodoList[index][1];
     });
   }
 
-  final _Controller1 = TextEditingController();
-  // final _Controller2 = TextEditingController();
   void saveNewTask() {
-    setState(() {
-      TodoList.add([_Controller1.text, false]);
-      _Controller1.clear();
-    });
-    Navigator.of(context).pop();
+    if (_Controller1.text.isNotEmpty) {
+      setState(() {
+       TodoList.insert(0, [_Controller1.text, false]);
+        _Controller1.clear();
+      });
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Task cannot be empty")),
+      );
+    }
   }
 
   void createNewtask() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return DialogBox(
-            controller1: _Controller1,
-            // controller2: _Controller2,
-            onSave: saveNewTask,
-            onCancel: () => Navigator.of(context).pop(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller1: _Controller1,
+          onSave: saveNewTask,
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
   }
 
   void deleteTask(int index) {
@@ -50,18 +60,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
-        title: const Text('TO DO APP'),
-        elevation: 0.0,
+        title: const Text('TO-DO APP'),
         centerTitle: true,
-        backgroundColor: Colors.yellow[800],
+        actions: [
+          IconButton(
+            icon: Icon(isDarkMode ? Icons.brightness_6 : Icons.brightness_2),
+            onPressed: widget.toggleTheme,
+          ),
+        ],
+        leading: IconButton(
+          icon: const Icon(Icons.api),
+          onPressed: () {
+            Navigator.pushNamed(context, '/api-posts');
+          },
+        ),
       ),
+      
       floatingActionButton: FloatingActionButton(
-          onPressed: createNewtask, child: const Icon(Icons.add)),
+        onPressed: createNewtask,
+        child: const Icon(Icons.add),
+      ),
       body: ListView.builder(
+        padding: const EdgeInsets.only(top:12.0),
         itemCount: TodoList.length,
         itemBuilder: (context, index) {
           return ToDoTile(

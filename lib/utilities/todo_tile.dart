@@ -1,54 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ToDoTile extends StatelessWidget {
-  @override
   final String taskName;
   final bool taskCompleted;
-  Function(bool?)? onChanged;
-  Function(BuildContext)? deleteFunction;
-  ToDoTile(
-      {super.key,
-      required this.taskName,
-      required this.taskCompleted,
-      required this.onChanged,
-      required this.deleteFunction
-      });
+  final Function(bool?)? onChanged;
+  final Function(BuildContext)? deleteFunction;
+
+  const ToDoTile({
+    Key? key,
+    required this.taskName,
+    required this.taskCompleted,
+    required this.onChanged,
+    required this.deleteFunction,
+  }) : super(key: key);
+
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
+   
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 25,
-        right: 25,
-        top: 25,
-      ),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
-          children: [ 
-            SlidableAction(
-            onPressed: deleteFunction,
-            icon: Icons.delete,
-            backgroundColor: Colors.red,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          ],
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDarkMode ? Color.fromARGB(232, 37, 156, 226) : Colors.yellow[800], 
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(5.0)),
-          child: Row(
-            children: [
-              Checkbox(value: taskCompleted, onChanged: onChanged),
-              Text(
-                taskName,
-                style: TextStyle(
-                    decoration: taskCompleted
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none),
-              ),
-            ],
+        child: ListTile(
+          leading: Checkbox(
+            value: taskCompleted,
+            onChanged: onChanged,
+            activeColor: Colors.white, 
+            checkColor: isDarkMode ? Colors.blue : Colors.yellow[800], 
+          ),
+          title: Text(
+            taskName,
+            style: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black, 
+              decoration: taskCompleted ? TextDecoration.lineThrough : null,
+            ),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              if (deleteFunction != null) {
+                deleteFunction!(context);
+              }
+            },
           ),
         ),
       ),

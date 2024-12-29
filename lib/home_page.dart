@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utilities/dialog_box.dart';
 import 'package:myapp/utilities/todo_tile.dart';
+import 'package:myapp/utilities/shared_preferences_service.dart'; // Import SharedPreferences service
 
 class HomePage extends StatefulWidget {
   final VoidCallback toggleTheme;
@@ -12,27 +13,62 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List TodoList = [
-    ["Study", true],
-    ["Exercise", false],
-    ["Code", false]
-  ];
+  
+  List<Map<String, dynamic>> TodoList = [];
 
   final _Controller1 = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTodoList(); 
+  }
+
+  
+  Future<void> _loadTodoList() async {
+    List<Map<String, dynamic>> loadedTodoList = await SharedPreferencesService.loadTodoList();
+
+    
+    if (loadedTodoList.isEmpty) {
+      setState(() {
+        TodoList = [
+          {'title': 'Study Flutter', 'completed': false},
+          {'title': 'Exercise', 'completed': false},
+          {'title': 'Read Books', 'completed': false},
+        ];
+      });
+      _saveTodoList(); 
+    } else {
+      setState(() {
+        TodoList = loadedTodoList;
+      });
+    }
+  }
+
+  
+  Future<void> _saveTodoList() async {
+    await SharedPreferencesService.saveTodoList(TodoList);
+  }
+
+  
   void checkBoxChanged(bool? value, int index) {
     setState(() {
-      TodoList[index][1] = !TodoList[index][1];
+      TodoList[index]['completed'] = !TodoList[index]['completed'];
     });
+    _saveTodoList(); 
   }
 
   void saveNewTask() {
     if (_Controller1.text.isNotEmpty) {
       setState(() {
-       TodoList.insert(0, [_Controller1.text, false]);
-        _Controller1.clear();
+        TodoList.insert(0, {
+          'title': _Controller1.text, 
+          'completed': false, 
+        });
+        _Controller1.clear(); 
       });
-      Navigator.of(context).pop();
+      _saveTodoList(); 
+      Navigator.of(context).pop(); 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Task cannot be empty")),
@@ -40,6 +76,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  
   void createNewtask() {
     showDialog(
       context: context,
@@ -53,10 +90,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  
   void deleteTask(int index) {
     setState(() {
       TodoList.removeAt(index);
     });
+    _saveTodoList(); 
   }
 
   @override
@@ -86,12 +125,12 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.only(top:12.0),
+        padding: const EdgeInsets.only(top: 12.0),
         itemCount: TodoList.length,
         itemBuilder: (context, index) {
           return ToDoTile(
-            taskName: TodoList[index][0],
-            taskCompleted: TodoList[index][1],
+            taskName: TodoList[index]['title'], 
+            taskCompleted: TodoList[index]['completed'], 
             onChanged: (value) => checkBoxChanged(value, index),
             deleteFunction: (context) => deleteTask(index),
           );

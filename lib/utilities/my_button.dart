@@ -9,10 +9,16 @@ class MyButton extends StatelessWidget {
   });
   @override
   Widget build(context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return MaterialButton(
+      
       onPressed:onPressed ,
-      color: Colors.grey[400],
-      child: Text(text),
+      color: isDarkMode ? Color.fromARGB(227, 22, 41, 55) : Colors.grey[400],
+      child: Text(text, 
+      style:TextStyle(
+        color: isDarkMode ?  Colors.white : Colors.black
+      ),
+      ),
     );
   }
 }

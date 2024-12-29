@@ -15,8 +15,9 @@ class DialogBox extends StatelessWidget {
     });
   @override
   Widget build(context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return AlertDialog(
-      backgroundColor: Colors.yellow,
+      backgroundColor: isDarkMode ? Color.fromARGB(232, 37, 156, 226) : Colors .yellow,
       content: SizedBox(
         height: 120,
         child: Column(
@@ -24,8 +25,8 @@ class DialogBox extends StatelessWidget {
           children: [
             TextField(
               controller: controller1,
-              decoration: const InputDecoration(
-              border: OutlineInputBorder(), hintText: "Title"),
+              decoration: InputDecoration(
+              border: OutlineInputBorder( borderSide: BorderSide(color: Colors.black)), hintText: "Title"),
             ),
             
             Row(

@@ -52,4 +52,30 @@ Before running the app, make sure you have the following installed:
        Connect your physical device to your computer via USB and ensure USB debugging is enabled then run the following command:
    ```bash
    flutter run
-    
+##images
+
+
+  Home Page: Light theme   
+  
+  ![WhatsApp Image 2024-12-29 at 11 35 25 PM](https://github.com/user-attachments/assets/7e4c7fb8-99fc-424b-a65d-bb7f05c35a4b)
+  
+  Home Page: Dark theme  
+  
+  ![WhatsApp Image 2024-12-29 at 11 41 16 PM](https://github.com/user-attachments/assets/30de39bf-d1b8-42de-9dc5-217bd970a04b)
+
+
+   API Posts Screen:
+
+  
+
+ ![WhatsApp Image 2024-12-29 at 11 43 19 PM](https://github.com/user-attachments/assets/22a227da-8396-45f5-a956-0fc7972ea0e4)
+
+
+  Filtering by UserID:
+
+
+  ![WhatsApp Image 2024-12-29 at 11 44 07 PM](https://github.com/user-attachments/assets/baf0e3cd-1472-4ac8-a39b-f03e3affdeb6)
+
+
+
+

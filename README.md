@@ -52,7 +52,7 @@ Before running the app, make sure you have the following installed:
        Connect your physical device to your computer via USB and ensure USB debugging is enabled then run the following command:
    ```bash
    flutter run
-##images
+## Images
 
 
   Home Page: Light theme   
